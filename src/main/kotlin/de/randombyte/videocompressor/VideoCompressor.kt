@@ -8,14 +8,13 @@ const val ORIGINAL = "original"
 const val COMPRESSED = "compressed"
 
 fun main(args: Array<String>) {
-    if (args.size != 3) {
-        println("Args: <base-path> <video-encoder> <crf-value>")
+    if (args.size != 2) {
+        println("Args: <base-path> <cq-value>")
         exitProcess(0)
     }
 
     val basePath = File(args[0])
-    val videoEncoder = args[1]
-    val crfValue = args[2]
+    val cqValue = args[1]
 
     val originalBase = basePath.resolve(ORIGINAL)
     val compressedBase = basePath.resolve(COMPRESSED)
@@ -38,7 +37,7 @@ fun main(args: Array<String>) {
             println("Compressing $originalFile to $compressedFile")
             val exitCode = ProcessBuilder("ffmpeg",
                 "-i", originalFile.absolutePath,
-                "-c:v", videoEncoder, "-crf", crfValue,
+                "-c:v", "h264_nvenc", "-cq", cqValue,
                 "-c:a", "libopus",
                 "-strict", "-2", // to allow opus in MP4
                 compressedFile.absolutePath
